@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
@@ -7,42 +8,16 @@ import 'package:graphql/client.dart';
 import 'success_login.dart';
 import 'unsuccessful_login.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   final Function()? onTap;
-  const LoginPage({Key? key, required this.onTap}) : super(key: key);
+  const RegisterPage({Key? key, required this.onTap}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  // Login http request
-  /*
-  Future login() async {
-    final url = Uri.parse('https://c8e6-181-235-179-127.ngrok-free.app/login');
-    final body = {
-      "user": {
-        "email": _emailController.text.trim(),
-        "password": _passwordController.text.trim(),
-      }
-    };
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(body),
-    );
-
-    if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-    } else {
-      print('No pudiste entrar jkejexd');
-    }
-  }
-  */
-  // Login GraphQL
-  Future login() async {
+class _RegisterPageState extends State<RegisterPage> {
+  Future register() async {
     final HttpLink httpLink = HttpLink(
       'http://172.26.64.1:5000/graphql', // Your GraphQL endpoint
     );
@@ -50,18 +25,11 @@ class _LoginPageState extends State<LoginPage> {
     final Link link = httpLink;
     // ignore: prefer_const_declarations
     final String loginMutation = """
-      mutation Login(\$email: String!, \$password: String!) {
-        loginUser(user: { email: \$email, password: \$password }) {
+     mutation CreateUser(\$email: String!, \$password: String!) {
+        createUser(user: { email: \$email, password: \$password }) {
           status {
             code
             message
-            data {
-              user {
-                id
-                email
-              }
-              token
-            }
           }
         }
       }
@@ -106,6 +74,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
@@ -131,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 10),
               // SUB TITLE
               Text(
-                'Login',
+                'Crea una cuenta',
                 style: TextStyle(fontSize: 20),
               ),
               SizedBox(height: 20),
@@ -168,11 +137,28 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(height: 20),
+              // PASSWORD CONFIRMATION
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TextField(
+                  controller: _confirmPasswordController,
+                  obscureText: true, // To hide the password
+                  decoration: InputDecoration(
+                    hintText: 'Confirmar Contraseña',
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
               // LOGIN BUTTON
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 25.0),
                 child: GestureDetector(
-                  onTap: login,
+                  onTap: register,
                   child: Container(
                     padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -180,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(12)),
                     child: Center(
                         child: Text(
-                      'Iniciar Sesión',
+                      'Crear Cuenta',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -195,12 +181,12 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('¿No tienes cuenta?'),
+                  Text('¿Ya tienes cuenta?'),
                   const SizedBox(width: 4),
                   GestureDetector(
                     onTap: widget.onTap,
                     child: const Text(
-                      'Crea una',
+                      'Inicia sesión',
                       style: TextStyle(
                           color: Colors.blue, fontWeight: FontWeight.bold),
                     ),

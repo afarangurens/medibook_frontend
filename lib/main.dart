@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medibook_frontend/auth/login_or_register.dart';
+import 'package:medibook_frontend/register_page.dart';
 import 'login_page.dart';
 
 void main() {
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const LoginPage(),
+      home: const LoginOrRegister(),
     );
   }
 }
